@@ -1,0 +1,18 @@
+.content p{
+	text-align:left;
+	width:778px;
+	margin:20px auto;
+}
+#map{
+	background-image:url(../img/gymMap.jpg);
+	background-position:center;
+	background-repeat:no-repeat;
+	width:778px;
+	height:556px;
+	margin:20px auto;
+	border-radius:5px;
+}
+#star{
+	margin-top:440px;
+	margin-left:120px;
+}

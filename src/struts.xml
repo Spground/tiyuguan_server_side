@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+<!-- 这是最新版的服务器端  2015/12/01-->
+<struts>
+	<include file="json-default" />
+	<include file="struts-default" />
+
+	<package name="user" namespace="/user" extends="struts-default">
+		<action name="login" class="com.dlut.cx.action.LoginAction">
+			<result type="redirect" name="success">/main.jsp</result>
+			<result type="redirect" name="error">/login.html</result>
+		</action>
+		<action name="changepassword" class="com.dlut.cx.action.ChangePasswordAction">
+			<result name="success">/courtinfo.jsp</result>
+			<result name="error">/changepassword.jsp</result>
+		</action>
+	</package>
+	
+	<package name="reserve" namespace="/reserve" extends="struts-default">
+		<action name="userCancelReserve" class="com.dlut.cx.action.ReserveAction" method="cancelReserve">
+			<result type="redirect">/myrecord.jsp</result>
+		</action>
+	</package>
+	
+	<package name="court" namespace="/court" extends="struts-default">
+		<action name="courtEdit" class="com.dlut.cx.action.CourtAction" method="editCourtInfo">
+			<result type="redirect">/courtedit.jsp</result>
+		</action>
+		<action name="courtDelete" class="com.dlut.cx.action.CourtAction" method="deleteCourtInfo">
+			<result type="redirect">/courtdelete.jsp</result>
+		</action>
+		<action name="courtAdd" class="com.dlut.cx.action.CourtAction" method="addCourtInfo">
+			<result type="redirect">/courtinfo.jsp</result>
+		</action>
+		<action name="adminCancelReserve" class="com.dlut.cx.action.ReserveAction" method="cancelReserve">
+			<result type="redirect">/record.jsp</result>
+		</action>
+	</package>
+	
+	<package name="jsonCourt" namespace="/court" extends="json-default">
+		<action name="courtInfo" class="com.dlut.cx.action.CourtAction" method="getAllCourtInfo">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package>
+
+	<package name="json-package" extends="json-default">
+		<action name="loginmobile" class="com.dlut.cx.action.LoginAction">
+			<result type="json" name="*"><param name="root">resultMap</param></result>
+		</action>
+		<action name="indexsport" class="com.dlut.cx.action.VenuesAction"
+			method="index">
+			<result type="json"><param name="root">sports</param></result>
+		</action>
+		<action name="venues" class="com.dlut.cx.action.SportAction"
+			method="getAllSportInfo">
+			<result type="json"><param name="root">v_map</param></result>
+		</action>
+		<action name="username" class="com.dlut.cx.action.UserAction"
+			method="username">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+		<action name="indexinfo" class="com.dlut.cx.action.VenuesAction"
+			method="getAllVenuesRestInfo">
+			<result type="json" name="success">
+				<param name="success"></param>
+			</result>
+		</action>
+		<action name="orderdetail" class="com.dlut.cx.action.RecordAction"
+			method="getOrderDetails">
+			<result type="json" name="success">
+				<param name="success"></param>
+			</result>
+		</action>
+		
+	</package>
+	
+	
+	<package name="jsonUser" namespace="/user" extends="json-default">
+		<action name="loginMobile" class="com.dlut.cx.action.LoginAction">
+			<result type="json" name="*"><param name="root">resultMap</param></result>
+		</action>
+		<action name="*" class="com.dlut.cx.action.UserAction"  method="{1}">
+			<result type="json" name="*"><param name="root">resultMap</param></result>
+		</action>
+	</package>
+	
+	<package name="jsonReserve" namespace="/reserve" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.ReserveAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package>
+	<package name="jsonVenues" namespace="/venues" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.VenuesAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package>
+	<package name="jsonSport" namespace="/sport" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.SportAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package> 
+	<package name="jsonRecord" namespace="/record" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.RecordAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package> 
+	<!--<package name="jsonNews" namespace="/news" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.NewsAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package> -->
+	
+	<package name="jsonNews" namespace="/news" extends="json-default">
+		<action name="*" class="com.dlut.cx.action.NewsAction" method="{1}">
+			<result type="json"><param name="root">resultMap</param></result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,29 @@
+#floor{
+	margin:0;
+	background-color:#000;
+	color:#fff;
+	font-size:14px;
+	padding:7px 12px;
+	border-bottom:1px solid #aaa;
+}
+#floor img{
+	margin:0 5px;
+}
+#floor a{
+	color:#fff;
+}
+#floor a:hover{
+	color:#f00;
+}
+body>div:first-child .content{
+	width:90%;
+	margin:10px auto;
+	background-color:#fbfbfb;
+	border:1px solid #c0c0c0;
+	text-align:center;
+	padding:5px 0;
+}
+.content span{
+	display:block;
+	font-size:40px;
+}

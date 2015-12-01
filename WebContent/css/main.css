@@ -1,0 +1,143 @@
+@charset "utf-8";
+.logo{
+	width:480px;
+	height:120px;
+}
+#nav *{
+	color:#fff;
+}
+#nav{
+	background-color:#0072ac;
+	margin: 0 0 20px;
+}
+
+#nav ul li{	
+	font-size:18px;
+	display:inline-block;
+	width:6em;
+	margin-left:-5px;
+	height:55px;
+	line-height:55px;
+	text-shadow:1px 1px 0 #999;
+}
+
+#nav ul li a{	
+	display:block;
+	text-align:center;
+}
+
+#nickname{
+	font-size:16px;
+}
+
+#nickname_li{
+	width:20em;
+	text-align:right;
+}
+
+#nickname_li a:hover{
+	color:red;
+	font-size:18px;
+}
+
+#nav ul li a:hover{
+	background-color:#30abc1;
+	text-decoration:none;
+}
+#nav .ul-right{
+	float:right;
+}
+.welcome{
+	text-align:right;
+	color:#ff0;
+	text-shadow:1px 1px 0 #aaa;
+}
+.welcome a{
+	color:inherit;
+}
+body>div>span{
+	display:inline-block;
+	background:#0072ac;
+	font-size:20px;
+	font-weight:bold;
+	font-family:"宋体";
+	color:#fff;
+	padding:5px 12px;
+	border-radius:5px 5px 0 0;
+}
+#notice,#situation{
+	border:1px solid #c0c0c0;
+	padding:1%;
+	background-color:#fbfbfb;
+	border-radius:0 5px 5px 5px;
+}
+#notice>img{
+	width:50%;
+	margin-left:4%;
+	vertical-align:top;
+	border-radius:5px;
+}
+#notice>div{
+	padding:0;
+	margin:10px;
+	width:40%;
+	display:inline-block;
+}
+#notice>div>a{
+	font-size:12px;
+	float:right;
+	margin-top:10px;
+	color:#f00;
+	text-shadow:0 0 1px #333;
+}
+#notice ul{
+	padding:0;
+}
+#notice ul li{
+	height:30px;
+	line-height:30px;
+	border-bottom:1px dashed #c0c0c0;
+}
+#notice ul li a{
+	color:#000;
+}
+#notice a:hover{
+	text-decoration:underline;
+}
+#notice ul li span{
+	float:right;
+	color:#aaa;
+	font-size:14px;
+}
+#service>img{
+	vertical-align:middle;
+}
+#service>div{
+	vertical-align:middle;
+	display:inline-block;
+}
+#service ul li {
+	width:100px;
+	display:inline-block;
+	text-align:center;
+}
+#service ul:last-child{
+	height:25px;
+	line-height:25px;
+	margin:0;
+}
+#service ul li a{
+	display:block;
+}
+#service ul li a img{
+	margin:0 auto;
+	border:none;    /*IE*/
+}
+#tablearea{
+	max-height:180px;
+	overflow-y:scroll;
+}
+#situation td,#situation th{
+	padding:10px 0;
+	width:25%;
+}

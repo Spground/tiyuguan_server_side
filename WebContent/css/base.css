@@ -1,0 +1,131 @@
+* {
+	font-family:'Microsoft YaHei';
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+h1,h2,h3,h4,h5,h6{
+	font-family:'ËÎÌו';
+}
+body{
+	padding:10px 5%;
+	margin:0;
+	background-image:url(../img/background.png);
+}
+ul{
+	padding:0 auto;
+	margin:0;
+}
+ul li{
+	list-style:none;
+}
+a{
+	text-decoration:none;
+}
+a:hover{
+	cursor:pointer;
+}
+body>div:first-child{
+	background-color:#fff;
+	border-radius:10px 10px 0 0;
+	border:0 solid #0072ac;
+	border-width:0 1px;
+	overflow:hidden;
+}
+body>div:first-child>*{
+	margin:0 20px;
+}
+body>div:first-child>hr{
+	margin:10px 20px;
+	border:1px solid #c0c0c0;
+}
+body>div:first-child>div:last-child{
+	margin-bottom:20px;
+}
+#bottom{
+	padding:12px 0;
+	color:#fff;
+	text-shadow:1px 1px 0 #888;
+	text-align:center;
+	border-radius:0 0 10px 10px;
+	border:1px solid #aaa;
+	background:rgba(0,0,0,0.3);
+	font-size:12px;
+}
+textarea,select,input,label{
+	text-align: center;
+	vertical-align: middle;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	border-radius: 3px;
+	outline:none;
+	margin-right:10px;
+}
+textarea{
+	resize:none;
+	border-color:#c0c0c0;
+	text-align:left;
+}
+select{
+	/*color: #fff;
+	background-color: #aa73c7;
+	border-color: #a124db;*/
+	border-color:#c0c0c0;
+	margin-left:0;
+}
+input{
+    background-color:#fff;
+	border-color:#c0c0c0;
+	color:#000;
+	text-align:left;
+	padding:7px 12px;
+}
+input[type="checkbox"]{
+	margin:0 5px ;
+	background-color:transparent;
+	border:none;
+}
+input[type="radio"]{
+	margin-top:-6px;
+	margin-left:12px;
+}
+input[type="button"],input[type="submit"],input[type="reset"]{
+	margin-left:12px;
+	color: #fff;
+	padding:4px 12px;
+	background-color: #0072ac;
+	border-color: #448;
+	box-shadow:0 0 5px 0 #82a2cc inset;
+}
+select:hover,input[type="button"]:hover,input[type="submit"]:hover,input[type="reset"]:hover{
+	outline: 5px auto #eb7a12/*-webkit-focus-ring-color*/;
+    outline-offset: -2px;
+	cursor:pointer;
+}
+textarea:focus,input[type="text"]:focus,input[type="password"]:focus{
+	border-color: #30abc1;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+	-webkit-user-select: auto;
+}
+table{
+	width:90%;
+	margin:10px auto;
+	text-align:center;
+	border-collapse: collapse;
+	border-spacing: 0;
+	clear:both;
+	font-size:14px;
+}
+table thead tr{
+	border:1px solid #c0c0c0;
+	border-width:1px 0;
+}
+td,th{
+	/*padding:10px 50px;*/
+}

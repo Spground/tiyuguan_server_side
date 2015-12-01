@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>体育馆预约系统登录</title>
+	<link rel="stylesheet" href="css/base.css" />
+	<link rel="stylesheet" href="css/floor.css" />
+	<link rel="stylesheet" href="css/login.css" />
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/SHA256.js"></script>
+	<script src="js/login.js"></script>
+</head>
+<body>
+	<div>
+		<div id="floor">
+			<img src="img/home.jpg"/>您当前的位置：<a href="main.jsp">首页</a>->登录
+		</div>
+	<span class="login-title">体&nbsp;育&nbsp;馆&nbsp;预&nbsp;约&nbsp;系&nbsp;统&nbsp;登&nbsp;录&nbsp;</span>
+	<div id="login" class="main">
+		<img src="img/dlut.jpg"/>
+		<form id="form" action="user/login.action" method="post">
+			<div>
+				<label for="userId">学号/账号</label>
+				<input id="userId" class="input" type="text" name="userId" placeholder="请输入学号/账号"/>
+			</div>
+            <div>
+				<label for="password">密码</label>
+				<input id="password" class="input" type="password" name="password" placeholder="请输入密码"/>
+			</div>
+			<div align="right">
+				<input type="checkbox" name="cookie" value="remember-me"/>记住密码
+				<input type="checkbox" name="identity" value="manager" checked>管理员登录
+			</div>
+			<div align="right">
+				<input class="button-success" type="reset" value="重&nbsp;&nbsp;&nbsp;置"/>
+				<input class="button-success" type="submit" value="登&nbsp;&nbsp;&nbsp;录"/>
+			</div>
+        </form>
+	</div>
+	</div>
+	<div id="bottom">
+		Copyright © 2015 - 2016 DutGym.All Rights Reserved.<br>
+		DUT体育馆创新项目团队 版权所有
+	</div>
+</body>
+</html>

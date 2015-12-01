@@ -1,0 +1,32 @@
+#login{
+	width:520px;
+	margin:50px auto;
+	border: 1px solid #e1e1e1;
+	-webkit-box-shadow: 0 0 3px #eee,inset 0 0 3px #fff;
+	box-shadow: 0 0 3px #eee,inset 0 0 3px #fff;
+	background: #fff;
+	border-radius:7px;
+	padding:10px 20px;
+}
+.login-title{
+	font-size:28px;
+	color:#0072ac;
+	text-align:center;
+	font-weight:600;
+	text-shadow:1px 1px 1px #c0c0c0;
+	display:block;
+	border-bottom:3px solid #cecece;
+	padding:10px 0;
+}
+
+label{
+	display:inline-block;
+	width:6em;
+}
+#form>div{
+	margin-top:10px;
+}
+#login img {
+	width:60%;
+	margin:0 20%;
+}

@@ -1,0 +1,18 @@
+hr{
+	width:80%;
+	border:none;
+	border-top:2px solid #efefef;
+	border-bottom:1px solid #c0c0c0;
+}
+.content p{
+	text-align:left;
+	margin:10px 30px;
+}
+.content .time{
+	color:#f00;
+	font-size:14px;
+}
+.content .img-describe{
+	text-align:center;
+	font-size:16px;
+}
