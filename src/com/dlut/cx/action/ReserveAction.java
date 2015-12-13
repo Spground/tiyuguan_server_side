@@ -3,6 +3,7 @@ package com.dlut.cx.action;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,48 +13,51 @@ import org.apache.struts2.ServletActionContext;
 
 import com.dlut.cx.service.ReserveService;
 import com.dlut.cx.util.C;
+import com.dlut.cx.util.GeneralUtil;
 
 public class ReserveAction extends BaseAction {
 
 	/**
-	 * 
+	 * 用户预约管理模块
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	private HttpSession session = ServletActionContext.getRequest().getSession();
 	private String userId = (String)session.getAttribute(session.getId());
 	
-	private String startTime;
-	private String endTime;
+	private ReserveService reserveService = new ReserveService();
+	private int startTime;
+	private int endTime;
 	
-	private int venuesId;
-	private int location;
+	private String venueId;
+	private String locationId;
 	
-	private String recordId;
+	private String orderId;
 	
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	
-	public void setStartTime(String startTime) {
+	public void setStartTime(int startTime) {
 		this.startTime = startTime;
 	}
 	
-	public void setEndTime(String endTime) {
+	public void setEndTime(int endTime) {
 		this.endTime = endTime;
 	}
 	
-	public void setVenuesId(int venuesId) {
-		this.venuesId = venuesId;
+	public void setVenueId(String venueId) {
+		this.venueId = venueId;
 	}
 	
-	public void setLocation(int location) {
-		this.location = location;
+	public void setLocationId(String locationId) {
+		this.locationId = locationId;
 	}
 	
-	public void setRecordId(String recordId) {
-		this.recordId = recordId;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
+	
 	/**
 	 * 下订单
 	 * @return
@@ -62,30 +66,31 @@ public class ReserveAction extends BaseAction {
 		setResultMap(C.code.RESERVE, C.message.FAIL);
 		
 		paramList.clear();
-		paramList.add(venuesId);
-		paramList.add(location);
+		paramList.add(venueId);
+		paramList.add(locationId);
 		paramList.add(startTime);
 		
-		ReserveService reserve=new ReserveService();
-		if(reserve.checkReserve(paramList) == 0){
+		if(reserveService.checkReserve(paramList) == 0){
 			
 			paramList.clear();
-			String orderId =  generateRecordId();
+			int makeTime = GeneralUtil.getNowTimeStamp();
+			String orderId =  GeneralUtil.generateOrderId(makeTime);
 			paramList.add(orderId);
-			paramList.add(venuesId);
+			paramList.add(venueId);
 			paramList.add(userId);
-			paramList.add(location);
+			paramList.add(locationId);
 			paramList.add(startTime);
 			paramList.add(endTime);
+			paramList.add(makeTime);
 			
-			if(reserve.makeReserve(paramList) > 0){
-				Map<String,String> recordObj = new HashMap<>();
-				recordObj.put("venuesId", venuesId + "");
+			if(reserveService.makeReserve(paramList) > 0){
+				Map<String,Object> recordObj = new HashMap<>();
+				recordObj.put("venueId", venueId);
 				recordObj.put("userId", userId);
-				recordObj.put("location", location + "");
+				recordObj.put("locationId", locationId);
 				recordObj.put("startTime", startTime);
 				recordObj.put("endTime", endTime);
-				recordObj.put("recordId", orderId);
+				recordObj.put("orderId", orderId);
 				setResultMap(C.code.RESERVE, C.message.SUCCESS,C.name.RESERVE_MAPNAME, recordObj);
 			}
 				
@@ -94,14 +99,17 @@ public class ReserveAction extends BaseAction {
 		return SUCCESS;
 	}
 	
+	/**
+	 * 取消用户的预约
+	 * @return
+	 */
 	public String cancelReserve() {
 		setResultMap(C.code.CANCEL, C.message.FAIL);
 		
 		paramList.clear();
-		paramList.add(recordId);
+		paramList.add(orderId);
 		
-		ReserveService reserve = new ReserveService();
-		if(reserve.cancelReserve(paramList) > 0)
+		if(reserveService.cancelReserve(paramList) > 0)
 			setResultMap(C.code.CANCEL, C.message.SUCCESS);
 		
 		return SUCCESS;
@@ -118,8 +126,7 @@ public class ReserveAction extends BaseAction {
 		paramList.add(startTime);
 		paramList.add(endTime);
 		
-		ReserveService reserve = new ReserveService();
-		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, reserve.getReserve(paramList));
+		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, reserveService.getReserve(paramList));
 		return SUCCESS;
 	}
 	
@@ -132,37 +139,9 @@ public class ReserveAction extends BaseAction {
 		paramList.clear();
 		paramList.add(userId);
 		
-		ReserveService reserve = new ReserveService();
-		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, reserve.getUseableReserve(paramList));
+		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, reserveService.getUseableReserve(paramList));
 		return SUCCESS;
 	}
 	
-	public String getHistoryReserve() {
-		if(userId == null) {
-			setResultMap(C.code.RECORD, C.message.FAIL);
-			return SUCCESS;
-		}
-		
-		paramList.clear();
-		paramList.add(userId);
-		
-		ReserveService reserve = new ReserveService();
-		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, reserve.getHistoryReserve(paramList));
-		return SUCCESS;
-	}
-	
-	/**生成订单号**/
-	private String generateRecordId() {
-		DateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
-		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String recordId = null;
-		try {
-			recordId = df.format(sdf.parse(startTime)) + venuesId + location;
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			recordId = startTime.substring(0,startTime.length() - 2) + venuesId + location;
-			e.printStackTrace();
-		}
-		return recordId;
-	}
+
 }

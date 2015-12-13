@@ -79,8 +79,8 @@ public class BaseService {
 	 * @param paramList
 	 * @return 查询单行记录返回map
 	 */
-	protected Map<String, String> getQueryMap(String sql,List<Object> paramList) {
-		List<Map<String, String>> resultList = this.getQueryList(sql, paramList);
+	protected Map<String, Object> getQueryMap(String sql,List<Object> paramList) {
+		List<Map<String, Object>> resultList = this.getQueryList(sql, paramList);
 		return resultList == null ? null : resultList.get(0);
 	}
 		
@@ -90,11 +90,11 @@ public class BaseService {
 	 * @param paramList
 	 * @return 查询多行记录 ；sql 语句为空或 pstmt，rs 初始化失败时返回 null
 	 */
-	protected List<Map<String, String>> getQueryList(String sql,List<Object> paramList) {
+	protected List<Map<String, Object>> getQueryList(String sql,List<Object> paramList) {
 		if(sql == null||sql.trim().equals("")) {
 			return null;
 		}
-		List<Map<String,String>> queryList = null;
+		List<Map<String,Object>> queryList = null;
 		try {
 			conn = BaseService.getConnection();
 			pstmt = BaseService.getPreparedStatement(conn,sql);
@@ -163,17 +163,23 @@ public class BaseService {
 		ResultSet rs = pstmt.executeQuery();
 		return rs;
 	} 
-		
-	private static List<Map<String, String>> getQueryList(ResultSet rs)throws Exception {
+	
+	/**
+	 * 返回SQL查询的结果，每一个Map代表一行记录，返回的类型是数据库的实际类型
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
+	private static List<Map<String, Object>> getQueryList(ResultSet rs)throws Exception {
 		if(rs == null)
 			return null;
 		ResultSetMetaData rsMetaData = rs.getMetaData();
 		int columnCount = rsMetaData.getColumnCount();
-		List<Map<String,String>> dataList = new ArrayList<Map<String, String>>();
+		List<Map<String,Object>> dataList = new ArrayList<Map<String, Object>>();
 		while(rs.next()) {
-			Map<String,String> dataMap = new HashMap<String, String>();
+			Map<String,Object> dataMap = new HashMap<String, Object>();
 			for(int i = 0;i < columnCount;i++)
-				dataMap.put(rsMetaData.getColumnName(i + 1), rs.getString(i + 1));
+				dataMap.put(rsMetaData.getColumnLabel(i + 1), rs.getObject(i + 1));
 			dataList.add(dataMap);
 		}
 		return dataList;

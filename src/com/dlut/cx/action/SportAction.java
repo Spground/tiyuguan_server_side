@@ -22,16 +22,16 @@ public class SportAction extends BaseAction {
 		SportService sport = new SportService();
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 		
-		Iterator<Map<String, String>> it= sport.getSportInfo().iterator();
+		Iterator<Map<String, Object>> it= sport.getSportInfo().iterator();
 		while(it.hasNext()) {
 			Map<String, Object> dataItem = new HashMap<String, Object>();
-			Map<String, String> sportItem = it.next();
+			Map<String, Object> sportItem = it.next();
 			
 			paramList.clear();
-			paramList.add(Integer.parseInt(sportItem.get("sportId")));
+			paramList.add(Integer.parseInt((String)sportItem.get("sportId")));
 			
 			dataItem.putAll(sportItem);
-			dataItem.put(C.name.VENUES_MAPNAME, sport.getSportVenues(paramList));
+			dataItem.put(C.name.VENUE_MAPNAME, sport.getSportVenues(paramList));
 			
 			data.add(dataItem);
 		}

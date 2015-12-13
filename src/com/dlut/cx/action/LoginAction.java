@@ -1,14 +1,8 @@
 package com.dlut.cx.action;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.binary.Hex;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
@@ -16,8 +10,13 @@ import org.apache.struts2.interceptor.SessionAware;
 
 import com.dlut.cx.service.UserService;
 import com.dlut.cx.util.C;
+import com.dlut.cx.util.GeneralUtil;
 
-
+/**
+ * 
+ * @author asus
+ * last modified at 2015/12/04 by wujie
+ */
 public class LoginAction extends BaseAction implements SessionAware, ServletRequestAware, ServletResponseAware{
 
 	/**
@@ -57,19 +56,20 @@ public class LoginAction extends BaseAction implements SessionAware, ServletRequ
 			paramList.clear();
 			paramList.add(userId);
 			
-			UserService user = new UserService();
-			String userPassword = user.getPassword(paramList);
-			
-			String sha = SHA256(userPassword, nowTime);
+			UserService userService = new UserService();
+			String userPassword = userService.getPassword(paramList);
+			String sha = GeneralUtil.getPwdSHA256(userPassword, nowTime);
 			if(password.equalsIgnoreCase(sha)) {
 				result="success";
-				setResultMap(C.code.LOGIN, C.message.SUCCESS, C.name.LOGIN_MAPNAME, user.getUserInfo(paramList).get(0));
+				//查询成功以后默认返回用户的基本信息
+				setResultMap(C.code.LOGIN, C.message.SUCCESS, C.name.LOGIN_MAPNAME, 
+						userService.getUserInfo(paramList));
 				
 				HttpServletRequest request = ServletActionContext.getRequest();
 				String sessionID = request.getSession().getId();
 			    request.getSession().setAttribute(sessionID, userId);
 			 
-			    String role = user.getRole(paramList);
+			    String role = userService.getRole(paramList);
 	
 			    request.getSession().setAttribute(userId, role);
 			    
@@ -81,7 +81,7 @@ public class LoginAction extends BaseAction implements SessionAware, ServletRequ
 					paramList.add(cookie);
 					paramList.add(userId);
 					
-					user.setCookie(paramList);
+					userService.setCookie(paramList);
 					
 					response.addCookie(cookie);
 				}
@@ -91,36 +91,17 @@ public class LoginAction extends BaseAction implements SessionAware, ServletRequ
 		return result;
 	}
 	
-	private String SHA256(String passwordSHA256,String time) {
-		MessageDigest digest;
-		String sha256=passwordSHA256+time;
-		try {
-			digest = MessageDigest.getInstance("SHA-256");
-			byte[] hash = digest.digest(sha256.getBytes("UTF-8"));
-			sha256 = Hex.encodeHexString(hash);
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-
-			e.printStackTrace();
-		}
-		return sha256;
-	}
 	
 	@Override
 	public void setServletResponse(HttpServletResponse arg0) {
 		// TODO Auto-generated method stub
-
-		this.response=arg0;
+		this.response = arg0;
 	}
 	
 	@Override
 	public void setServletRequest(HttpServletRequest arg0) {
 		// TODO Auto-generated method stub
-
 		
 	}
 	

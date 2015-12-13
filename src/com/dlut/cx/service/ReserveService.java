@@ -10,8 +10,8 @@ public class ReserveService extends BaseService {
 	 * @return 返回数据库操作影响行数
 	 */
 	public int makeReserve(List<Object> paramList) {
-		String sql = "insert into tbl_record(recordId, venuesId, userId, location,"
-				+ " startTime, endTime) values(?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tyg_order(orderid, venueid, userid, locationid,"
+				+ " startTime, endTime, makeTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		return this.execute(sql, paramList);
 	}
 	
@@ -42,7 +42,7 @@ public class ReserveService extends BaseService {
 	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
 	 * 结束时间 endTime
 	 */
-	public List<Map<String, String>> getReserve(List<Object> paramList) {
+	public List<Map<String, Object>> getReserve(List<Object> paramList) {
 		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
 				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
 				+ " and r.userId = ? and r.startTime >= ? and r.endTime <= ?"
@@ -56,7 +56,7 @@ public class ReserveService extends BaseService {
 	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
 	 * 结束时间 endTime
 	 */
-	public List<Map<String, String>> getReserveByDate(List<Object> paramList) {
+	public List<Map<String, Object>> getReserveByDate(List<Object> paramList) {
 		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
 				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
 				+ " and r.userId = ? and date(r.startTime) = ? order by r.startTime desc";
@@ -69,23 +69,11 @@ public class ReserveService extends BaseService {
 	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间（时间） startTime，
 	 * 结束时间（时间） endTime ，预约日期（日期） recordDate
 	 */
-	public List<Map<String, String>> getUseableReserve(List<Object> paramList) {
+	public List<Map<String, Object>> getUseableReserve(List<Object> paramList) {
 		String sql = "select recordId, venuesName, location, time(startTime) startTime,"
 				+ " time(endTime) endTime, date(startTime) recordDate from tbl_venues v , tbl_record r where r.venuesId ="
 				+ " v.venuesId and userId = ? and r.endTime > now() order by r.startTime asc";
 		return this.getQueryList(sql, paramList);
 	}
 	
-	/**
-	 * 获取用户所有已经过期的历史预约记录，按照预约开始时间降序排列
-	 * @param paramList (userId)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间（时间） startTime，
-	 * 结束时间（时间） endTime ，预约日期（日期） recordDate
-	 */
-	public List<Map<String, String>> getHistoryReserve(List<Object> paramList) {
-		String sql = "select recordId, venuesName, location, time(startTime) startTime,"
-				+ " time(endTime) endTime, date(startTime) recordDate from tbl_venues v , tbl_record r where r.venuesId ="
-				+ " v.venuesId and userId = ? and r.endTime <= now() order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
-	}
 }
