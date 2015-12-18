@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.dlut.cx.util.C;
+
 public class OrderServiceTest {
 
 	@Test
@@ -35,5 +37,12 @@ public class OrderServiceTest {
 	 //....
 	}
 	
+	@Test
+	public void testQueryOrderStatus() {
+		OrderService orderService = new OrderService();
+		Map<String, Object> result = orderService.queryOrderStatus("1");
+		assertNotNull(result);
+		assertEquals(C.recordStatus.FINISHED, result.get("status"));
+	}
 	
 }

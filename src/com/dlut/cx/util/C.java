@@ -51,7 +51,7 @@ public class C {
 		 * 用户没有在合理的日期里面取消订单或者是由管理员在发现到时间了这个人没有到来而手动设置的
 		 * 先前状态:new
 		 */
-		public static final String BREACH = "breach";
+		public static final String VIOLATED = "violated";
 		
 		/**
 		 * 用户成功预订，并且依照指定时间使用了场馆，由管理员在现场确认的时候手动设置

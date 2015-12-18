@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,8 +51,13 @@ public class GeneralUtil {
 		return orderId + suffix;
 	}
 	
+	/**
+	 * 得到现在的UNIX时间戳
+	 * @return
+	 */
 	public static int getNowTimeStamp() {
 		Date date = new Date();
 		return (int) (date.getTime() / 1000);
 	}
+	
 }

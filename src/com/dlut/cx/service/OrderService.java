@@ -44,4 +44,25 @@ public class OrderService extends BaseService{
 		return this.getQueryList(sql, paramList);
 	}
 	
+	/**
+	 * 查询一个订单的状态
+	 * @param orderId
+	 * @return
+	 */
+	public Map<String, Object> queryOrderStatus(String orderId) {
+		List<Object> paramList = new ArrayList<>();
+		paramList.add(orderId);
+		return queryOrderStatus(paramList);
+	}
+	
+	/**
+	 * 查询一个订单的状态
+	 * @param paramList
+	 * @return
+	 */
+	public Map<String, Object> queryOrderStatus(List<Object> paramList) {
+		String sql = "SELECT status FROM tyg_order WHERE orderid = ?";
+		return this.getQueryMap(sql, paramList);
+	}
+	
 }
