@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 	private static final String DBDRIVER = "com.mysql.jdbc.Driver";
-	private static final String DBURL =  "jdbc:mysql://localhost:3306/gym_reserve__?useUnicode=true&characterEncoding=UTF8";
+	private static final String DBURL =  "jdbc:mysql://localhost:3306/db_tiyuguan?useUnicode=true&characterEncoding=UTF8";
 	private static final String DBUSER = "root";
 	private static final String DBPASSWORD = "www.958340585.co";
 	

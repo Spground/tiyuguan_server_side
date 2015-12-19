@@ -8,8 +8,6 @@ import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.sql.PooledConnection;
-
 /*
  * 该文件主要实现了一个数据库连接池
  */

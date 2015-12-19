@@ -53,7 +53,7 @@ public class CourtAction extends BaseAction{
 	
 	public String getAllCourtInfo() {
 		CourtService court = new CourtService();
-		setResultMap(C.code.COURT, C.message.SUCCESS, C.name.VENUES_MAPNAME, court.getCourtInfo());
+		setResultMap(C.code.COURT, C.message.SUCCESS, C.name.VENUE_MAPNAME, court.getCourtInfo());
 		return SUCCESS;
 	}
 

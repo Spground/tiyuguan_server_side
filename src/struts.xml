@@ -18,11 +18,14 @@
 		</action>
 	</package>
 	
+	
 	<package name="reserve" namespace="/reserve" extends="struts-default">
 		<action name="userCancelReserve" class="com.dlut.cx.action.ReserveAction" method="cancelReserve">
 			<result type="redirect">/myrecord.jsp</result>
 		</action>
 	</package>
+	
+	
 	
 	<package name="court" namespace="/court" extends="struts-default">
 		<action name="courtEdit" class="com.dlut.cx.action.CourtAction" method="editCourtInfo">
@@ -39,17 +42,21 @@
 		</action>
 	</package>
 	
+	
+	
 	<package name="jsonCourt" namespace="/court" extends="json-default">
 		<action name="courtInfo" class="com.dlut.cx.action.CourtAction" method="getAllCourtInfo">
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
 	</package>
 
+
+
 	<package name="json-package" extends="json-default">
 		<action name="loginmobile" class="com.dlut.cx.action.LoginAction">
 			<result type="json" name="*"><param name="root">resultMap</param></result>
 		</action>
-		<action name="indexsport" class="com.dlut.cx.action.VenuesAction"
+		<action name="indexsport" class="com.dlut.cx.action.VenueAction"
 			method="index">
 			<result type="json"><param name="root">sports</param></result>
 		</action>
@@ -61,7 +68,7 @@
 			method="username">
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
-		<action name="indexinfo" class="com.dlut.cx.action.VenuesAction"
+		<action name="indexinfo" class="com.dlut.cx.action.VenueAction"
 			method="getAllVenuesRestInfo">
 			<result type="json" name="success">
 				<param name="success"></param>
@@ -77,6 +84,8 @@
 	</package>
 	
 	
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
 	<package name="jsonUser" namespace="/user" extends="json-default">
 		<action name="loginMobile" class="com.dlut.cx.action.LoginAction">
 			<result type="json" name="*"><param name="root">resultMap</param></result>
@@ -86,13 +95,14 @@
 		</action>
 	</package>
 	
+	
 	<package name="jsonReserve" namespace="/reserve" extends="json-default">
 		<action name="*" class="com.dlut.cx.action.ReserveAction" method="{1}">
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
 	</package>
 	<package name="jsonVenues" namespace="/venues" extends="json-default">
-		<action name="*" class="com.dlut.cx.action.VenuesAction" method="{1}">
+		<action name="*" class="com.dlut.cx.action.VenueAction" method="{1}">
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
 	</package>
@@ -106,15 +116,11 @@
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
 	</package> 
-	<!--<package name="jsonNews" namespace="/news" extends="json-default">
-		<action name="*" class="com.dlut.cx.action.NewsAction" method="{1}">
-			<result type="json"><param name="root">resultMap</param></result>
-		</action>
-	</package> -->
 	
 	<package name="jsonNews" namespace="/news" extends="json-default">
 		<action name="*" class="com.dlut.cx.action.NewsAction" method="{1}">
 			<result type="json"><param name="root">resultMap</param></result>
 		</action>
 	</package>
+	
 </struts>

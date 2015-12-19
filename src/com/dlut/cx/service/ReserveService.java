@@ -2,90 +2,113 @@ package com.dlut.cx.service;
 
 import java.util.*;
 
+import com.dlut.cx.util.C;
+
 
 public class ReserveService extends BaseService {
+	OrderService orderService = new OrderService();
+	
 	/**
 	 * 用户预约操作
-	 * @param paramList (venuesId, userId, location, startTime, endTime)
-	 * @return 返回数据库操作影响行数
+	 * @param paramList (orderId, venueId, userId, locationid, startTime, endTime, makeTime)
+	 * @return 返回下单成功的订单号
 	 */
 	public int makeReserve(List<Object> paramList) {
-		String sql = "insert into tbl_record(recordId, venuesId, userId, location,"
-				+ " startTime, endTime) values(?, ?, ?, ?, ?, ?)";
+		//TODO检查订单是否在同一时间段内有冲突
+		//冲突检查
+		List<Object> list = new ArrayList<>();
+		list.add(paramList.get(1));//venueid
+		list.add(paramList.get(3));//locationid
+		list.add(paramList.get(4));//starttime
+		list.add(paramList.get(5));//endtime
+		if(checkOrderConflictInTime(list))
+					return 0;
+		
+		String sql = "INSERT INTO tyg_order(orderid, venueid, userid, locationid,"
+				+ " starttime, endtime, maketime, status) VALUES(?, ?, ?, ?, ?, ?, ?,'" + 
+				C.recordStatus.NEW + "')";
 		return this.execute(sql, paramList);
 	}
 	
 	/**
 	 * 用户取消预约
-	 * @param paramList (recordId)
+	 * @param paramList (orderId)
 	 * @return 返回数据库操作影响行数
 	 */
 	public int cancelReserve(List<Object> paramList) {
-		String sql = "delete from tbl_record where recordId = ?";
+		//TODO
+		//if the order's status is not right
+		if(!checkOrderStatus(orderService.queryOrderStatus(paramList), C.recordStatus.NEW))
+			return 0;
+		String sql = "UPDATE tyg_order SET status = '" + C.recordStatus.CANCELED 
+				+"' WHERE orderid = ?";
 		return this.execute(sql, paramList);
 	}
 	
 	/**
-	 * 检查该时段，所选场地是否已经被预约，避免同一场地同一时间多次使用
-	 * @param paramList (venuesId, location, startTime)
-	 * @return 该时段，所选场地的预约数目，如果为 0 ，则可进行预约
+	 * 使一个订单为完成违约态
+	 * @param paraList (orderId)
+	 * @return
 	 */
-	public int checkReserve(List<Object> paramList) {
-		String sql = "select count(*) from tbl_record where venuesId = ? and"
-				+ " location = ? and startTime = ?";
-		return this.getCount(sql, paramList);
+	public int violateReserve(List<Object> paramList) {
+		//TODO check the order's status
+		if(!checkOrderStatus(orderService.queryOrderStatus(paramList), C.recordStatus.NEW))
+			return 0;
+		String sql = "UPDATE tyg_order SET status = '" + C.recordStatus.VIOLATED 
+				+"' WHERE orderid = ?";
+		return this.execute(sql, paramList);
 	}
 	
 	/**
-	 * 获取用户特定时间段内的预约记录
-	 * @param paramList (userId, startTime, endTime)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
-	 * 结束时间 endTime
+	 * 使一个订单为完成状态
+	 * @param paraList (orderId)
+	 * @return
 	 */
-	public List<Map<String, String>> getReserve(List<Object> paramList) {
-		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
-				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
-				+ " and r.userId = ? and r.startTime >= ? and r.endTime <= ?"
-				+ " order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
+	public int finishReserve(List<Object> paramList) {
+		//TODO check the order's status
+		if(!checkOrderStatus(orderService.queryOrderStatus(paramList), C.recordStatus.NEW))
+			return 0;
+		String sql = "UPDATE tyg_order SET status = '" + C.recordStatus.FINISHED 
+				+"' WHERE orderid = ?";
+		return this.execute(sql, paramList);
 	}
 	
 	/**
-	 * 获取用户指定日期的预约记录
-	 * @param paramList (userId, queryDay)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
-	 * 结束时间 endTime
+	 * 使一个订单变为错误状态
+	 * @param paraList (orderId)
+	 * @return
 	 */
-	public List<Map<String, String>> getReserveByDate(List<Object> paramList) {
-		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
-				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
-				+ " and r.userId = ? and date(r.startTime) = ? order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
+	public int errorReserve(List<Object> paramList) {
+		//TODO check the order's status
+		String sql = "UPDATE tyg_order SET status = '" + C.recordStatus.ERROR 
+				+"' WHERE orderid = ?";
+		return this.execute(sql, paramList);
+	}
+	
+	//TODO此方法有待改写
+	/**
+	 * 检查该时段是否存在时段上的冲突，所选场馆位置是否已经被预约，避免同一位置同一时间多次被预定
+	 * @param paramList (venueId, locationId, startTime， endTime)
+	 * @return 该时段，所选场地的预约数目，如果为 true ，则冲突 false不冲突
+	 */
+	public boolean checkOrderConflictInTime(List<Object> paramList) {
+		if(paramList == null || paramList.size() < 4) return true;
+		paramList.add(paramList.get(2));
+		paramList.add(paramList.get(3));
+		String sql = "SELECT COUNT(*) FROM tyg_order WHERE venueid = ? AND locationid = ? AND status='"
+				+ C.recordStatus.NEW + "' "
+				+ "AND NOT((endtime >= ? AND starttime >= ?) OR (endtime <= ? AND starttime <= ?))";
+		return this.getCount(sql, paramList) != 0;
 	}
 	
 	/**
-	 * 获取用户所有未过期的预约记录，按照预约开始时间升序排列
-	 * @param paramList (userId)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间（时间） startTime，
-	 * 结束时间（时间） endTime ，预约日期（日期） recordDate
+	 * 验证订单状态是否符合要求
+	 * @param statusMap
+	 * @param shouldbe
+	 * @return
 	 */
-	public List<Map<String, String>> getUseableReserve(List<Object> paramList) {
-		String sql = "select recordId, venuesName, location, time(startTime) startTime,"
-				+ " time(endTime) endTime, date(startTime) recordDate from tbl_venues v , tbl_record r where r.venuesId ="
-				+ " v.venuesId and userId = ? and r.endTime > now() order by r.startTime asc";
-		return this.getQueryList(sql, paramList);
+	private  boolean checkOrderStatus(Map<String, Object> statusMap, String shouldbe) {
+		return shouldbe.trim().equals(((String)statusMap.get("status")).trim());
 	}
 	
-	/**
-	 * 获取用户所有已经过期的历史预约记录，按照预约开始时间降序排列
-	 * @param paramList (userId)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间（时间） startTime，
-	 * 结束时间（时间） endTime ，预约日期（日期） recordDate
-	 */
-	public List<Map<String, String>> getHistoryReserve(List<Object> paramList) {
-		String sql = "select recordId, venuesName, location, time(startTime) startTime,"
-				+ " time(endTime) endTime, date(startTime) recordDate from tbl_venues v , tbl_record r where r.venuesId ="
-				+ " v.venuesId and userId = ? and r.endTime <= now() order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
-	}
 }

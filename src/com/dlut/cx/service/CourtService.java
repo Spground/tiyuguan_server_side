@@ -7,7 +7,7 @@ public class CourtService extends BaseService {
 	 * 获得所有体育场馆的资源信息
 	 * @return 场馆名 venuesName ，开放时间 openTime ，关闭时间 closeTime ，场地数量 locationNum ， 收费 venuesCharge ，是否开放 isOpen
 	 */
-	public List<Map<String, String>> getCourtInfo() {
+	public List<Map<String, Object>> getCourtInfo() {
 		String sql = "select venuesName, time(openTime) openTime, time(closeTime) closeTime, locationNum, venuesCharge, isOpen from tbl_venues";
 		return this.getQueryList(sql, null);
 	}

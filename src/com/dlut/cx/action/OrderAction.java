@@ -5,7 +5,7 @@ import java.util.*;
 import com.dlut.cx.service.*;
 import com.dlut.cx.util.C;
 
-public class RecordAction extends BaseAction {
+public class OrderAction extends BaseAction {
 
 	/**
 	 * 
@@ -19,14 +19,14 @@ public class RecordAction extends BaseAction {
 	}
 
 	public String getVenuesRestInfo() {	
-		RecordService record = new RecordService();
-		VenuesService venues = new VenuesService();
+		OrderService record = new OrderService();
+		VenueService venues = new VenueService();
 		
 		List<Map<String, Object>> data = new ArrayList<>();
-		List<Map<String, String>> venuesList;
+		List<Map<String, Object>> venuesList;
 		
 		if(sportId == 0) {
-			venuesList = venues.getVenuesInfo();
+			venuesList = venues.getAllOpenVenueInfo();
 		}
 		else {
 			paramList.clear();
@@ -35,7 +35,7 @@ public class RecordAction extends BaseAction {
 			venuesList = venues.getVenuesInfoBySport(paramList);
 		}
 		
-		for(Map<String, String> venuesInfo : venuesList) {
+		for(Map<String, Object> venuesInfo : venuesList) {
 			paramList.clear();
 			paramList.add(venuesInfo.get("venuesId"));
 			
@@ -46,13 +46,17 @@ public class RecordAction extends BaseAction {
 			data.add(dataMap);
 		}
 		
-		setResultMap(C.code.VENUES, C.message.SUCCESS, C.name.VENUES_MAPNAME, data);
+		setResultMap(C.code.VENUES, C.message.SUCCESS, C.name.VENUE_MAPNAME, data);
 		return SUCCESS;
 	}
 	
-	public String getReserveRecord() {
-		RecordService record = new RecordService();
-		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, record.getReserveRecord());
+	/**
+	 * 
+	 * @return
+	 */
+	public String getEndtimeInFutureOrder() {
+		OrderService record = new OrderService();
+		setResultMap(C.code.RECORD, C.message.SUCCESS, C.name.RESERVE_MAPNAME, record.getEndtimeInFutureOrder());
 		return SUCCESS;
 	}
 
