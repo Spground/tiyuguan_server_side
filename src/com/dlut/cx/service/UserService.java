@@ -3,6 +3,9 @@ package com.dlut.cx.service;
 import java.util.List;
 import java.util.Map;
 
+import com.dlut.cx.util.C;
+import com.dlut.cx.util.GeneralUtil;
+
 /**
  * 
  * @author asus
@@ -64,44 +67,97 @@ public class UserService extends BaseService{
 		return this.execute(sql, paramList);
 	}
 	
+	
+	/**
+	 * 获取用户指定时间段内的订单记录,如果未指定startTime 和 endTime,将默认筛选全部 并按照maketime降序排列
+	 * @param paramList (userId, startTime, endTime)
+	 * @return 预约号 orderId ，场馆名称 venueName，场地号 locationId，订单起始时间 startTime ，订单结束时间endTime....
+	 * 结束时间 endTime
+	 */
+	public List<Map<String, Object>> getUserAllOrderByStarttimeAndEndtime(List<Object> paramList) {
+		if(paramList == null || paramList.size() == 0)
+			return null;
+		String sql = "";
+		if(paramList.size() == 1)//指定了userId
+			return getUserAllOrder(paramList);
+		else if(paramList.size() == 2)//指定了userId 和 startTime
+			 sql = "SELECT orderid orderId, venuename venueName, o.venueid venueId, locationid locationId,"
+						+ "starttime startTime, endtime endTime, maketime makeTime, totalmoney totalMoney,"
+						+ "paymentterm paymentTerm, status Status, descr descr"
+						+ "	FROM tyg_venue v,tyg_order o WHERE v.venueid = o.venueid "
+						+ " AND userid = ? AND starttime >= ? ORDER BY maketime DESC";
+		else if(paramList.size() == 3)//指定了userId 和 startTime 和 endTime
+			 sql = "SELECT orderid orderId, venuename venueName, locationid locationId, o.venueid venueId,"
+						+ "starttime startTime, endtime endTime, maketime makeTime, totalmoney totalMoney,"
+						+ "paymentterm paymentTerm, status Status, descr descr"
+						+ "	FROM tyg_venue v,tyg_order o WHERE v.venueid = o.venueid "
+						+ " AND userid = ? AND starttime >= ? AND endtime <= ? ORDER BY maketime DESC";
+		return this.getQueryList(sql, paramList);
+	}
+	
+	/**
+	 * 返回指定用户所有的订单，按maketime降序排列
+	 * @param paramList（userId）
+	 * @return
+	 */
+	public List<Map<String, Object>> getUserAllOrder(List<Object> paramList) {
+		if(paramList == null || paramList.size() == 0)
+			return null;
+		String sql = "SELECT orderid orderId, venuename venueName, locationid locationId, o.venueid venueId,"
+				+ "starttime startTime, endtime endTime, maketime makeTime, totalmoney totalMoney,"
+				+ "paymentterm paymentTerm, status Status, descr descr"
+				+ "	FROM tyg_venue v, tyg_order o WHERE v.venueid = o.venueid "
+				+ " AND userid = ? ORDER BY maketime DESC";
+		return this.getQueryList(sql, paramList);
+	}
+	
+	
+	/**
+	 * 获取用户指定下单日期的订单记录
+	 * @param paramList (userId, queryStartDay 格式yyyy-MM-dd, queryEndDay 格式yyyy-MM-dd),
+	 *  如果queryStartDay 和 queryEndDay缺省，则默认当前日期，如果queryEndDay缺省，默认queryStartDay加上24小时
+	 * @return 预约号 orderId ，场馆名称 venueName，场地号 locationId，预约起始时间 startTime等等
+	 * 结束时间 endTime
+	 */
+	public List<Map<String, Object>> getUserAllOrderByMakeDate(List<Object> paramList) {
+		if(paramList == null || paramList.size() == 0)
+			return null;
+		if(paramList.size() == 2)
+			paramList.add(paramList.get(1));
+		if(paramList.size() == 1){
+			paramList.add(GeneralUtil.getNowyyyyMMddDateString());
+			paramList.add(GeneralUtil.getNowyyyyMMddDateString());
+		}
+			
+		String sql = "SELECT orderid orderId, venuename venueName, locationid locationId, o.venueid venueId,"
+					+ "starttime startTime, endtime endTime, maketime makeTime, totalmoney totalMoney,"
+					+ "paymentterm paymentTerm, status Status, descr descr"
+					+ "	FROM tyg_venue v, tyg_order o WHERE v.venueid = o.venueid "
+					+ " AND userid = ? AND UNIX_TIMESTAMP(?) <= maketime AND (UNIX_TIMESTAMP(?) + 86399) >= maketime "
+					+ "ORDER BY maketime DESC";
+		return this.getQueryList(sql, paramList);
+	}
+	
 	/*****************************************以下方法待测试***************************************************/
 	/**
-	 * 获取用户特定时间段内的订单记录
-	 * @param paramList (userId, startTime, endTime)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
-	 * 结束时间 endTime
-	 */
-	public List<Map<String, Object>> getUserOrder(List<Object> paramList) {
-		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
-				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
-				+ " and r.userId = ? and r.startTime >= ? and r.endTime <= ?"
-				+ " order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
-	}
-	
-	/**
-	 * 获取用户指定日期的预约记录
-	 * @param paramList (userId, queryDay)
-	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间 startTime，
-	 * 结束时间 endTime
-	 */
-	public List<Map<String, Object>> getReserveByDate(List<Object> paramList) {
-		String sql = "select r.recordId, v.venuesName, r.location, r.startTime, r.endTime "
-				+ "	from tbl_venues v,tbl_record r where v.venuesId = r.venuesId "
-				+ " and r.userId = ? and date(r.startTime) = ? order by r.startTime desc";
-		return this.getQueryList(sql, paramList);
-	}
-	
-	/**
-	 * 获取用户所有未过期的预约记录，按照预约开始时间升序排列
-	 * @param paramList (userId)
+	 * 获取用户指定订单状态的订单，按照下单时间降序排列
+	 * @param paramList (userId, Status)
 	 * @return 预约号 recordId ，场馆名称 venuesName，场地号 location，预约起始时间（时间） startTime，
 	 * 结束时间（时间） endTime ，预约日期（日期） recordDate
 	 */
-	public List<Map<String, Object>> getUseableReserve(List<Object> paramList) {
-		String sql = "select recordId, venuesName, location, time(startTime) startTime,"
-				+ " time(endTime) endTime, date(startTime) recordDate from tbl_venues v , tbl_record r where r.venuesId ="
-				+ " v.venuesId and userId = ? and r.endTime > now() order by r.startTime asc";
+	public List<Map<String, Object>> getUserAllOrderByStatus(List<Object> paramList) {
+		if(paramList == null || paramList.size() == 0)
+			return null;
+		if(paramList.size() == 1){
+			paramList.add(C.recordStatus.NEW);//缺省查询状态为NEW的订单
+		}
+		
+		String sql = "SELECT orderid orderId, venuename venueName, locationid locationId, o.venueid venueId,"
+				+ "starttime startTime, endtime endTime, maketime makeTime, totalmoney totalMoney,"
+				+ "paymentterm paymentTerm, status Status, descr descr"
+				+ "	FROM tyg_venue v, tyg_order o WHERE v.venueid = o.venueid "
+				+ " AND userid = ? AND status = ? "
+				+ "ORDER BY maketime DESC";
 		return this.getQueryList(sql, paramList);
 	}
 }

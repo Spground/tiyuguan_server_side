@@ -17,5 +17,10 @@ public class GeneralUtilTest {
 		System.out.println(GeneralUtil.getNowTimeStamp());
 		System.out.println(String.format("%03d", 1));
 	}
+	
+	@Test
+	public void testGetNowyyyyMMddDateString() {
+		assertEquals("2015-12-19", GeneralUtil.getNowyyyyMMddDateString());
+	}
 
 }

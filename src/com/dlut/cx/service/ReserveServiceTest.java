@@ -13,12 +13,12 @@ public class ReserveServiceTest {
 	public void testMakeReserve() {
 		reserveService = new ReserveService();
 		List<Object> paramList = new ArrayList<>();
-		paramList.add("10000");
+		paramList.add("1002");
 		paramList.add("1");
 		paramList.add("1");
 		paramList.add("1");
-		paramList.add(1000);
-		paramList.add(1000);
+		paramList.add(1450454600);
+		paramList.add(1450454699);
 		paramList.add(1000);
 		assertEquals(1,  reserveService.makeReserve(paramList));
 	}
@@ -43,11 +43,16 @@ public class ReserveServiceTest {
 		paramList.add("2");
 		assertEquals(1,  reserveService.errorReserve(paramList));
 	}
-//
-//	@Test
-//	public void testCheckReserve() {
-//		fail("Not yet implemented");
-//	}
+
+	@Test
+	public void testCheckOrderConflictInTime() {
+		List<Object> paramList = new ArrayList<>();
+		paramList.add("1");
+		paramList.add("1");
+		paramList.add(1450454600);
+		paramList.add(1450454699);
+		assertEquals(true,  reserveService.checkOrderConflictInTime(paramList));
+	}
 //
 //	@Test
 //	public void testGetReserve() {

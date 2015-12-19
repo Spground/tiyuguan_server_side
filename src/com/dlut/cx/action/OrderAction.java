@@ -26,7 +26,7 @@ public class OrderAction extends BaseAction {
 		List<Map<String, Object>> venuesList;
 		
 		if(sportId == 0) {
-			venuesList = venues.getVenuesInfo();
+			venuesList = venues.getAllOpenVenueInfo();
 		}
 		else {
 			paramList.clear();

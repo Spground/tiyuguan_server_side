@@ -37,7 +37,7 @@ public class GeneralUtil {
 	}
 	
 	/**
-	 * 生成订单号订单号生成规则
+	 * 生成订单号订单号生成规则  前面是日期的年月日时分秒加上后三位的随机数 一共是15位
 	 * @return
 	 */
 	public static String generateOrderId(int timeStamp) {
@@ -60,4 +60,13 @@ public class GeneralUtil {
 		return (int) (date.getTime() / 1000);
 	}
 	
+	/**
+	 * 得到现在日期字符串yyyy-MM-dd
+	 * @param sdf
+	 * @return
+	 */
+	public static String getNowyyyyMMddDateString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(new Date());
+	}
 }
